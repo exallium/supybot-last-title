@@ -1,5 +1,4 @@
 import supybot.callbacks as callbacks
-import supybot.utils as utils
 from supybot.commands import *
 import lxml.html
 
@@ -11,6 +10,7 @@ class LastTitle(callbacks.PluginRegexp):
     regexps = ['checkForTitle']
 
     def checkForTitle(self, irc, msg, match):
+        r"https?://[^\])>\s]+"
         x = match.group(0)
 
         for ext in FILEEXT:
@@ -26,7 +26,6 @@ class LastTitle(callbacks.PluginRegexp):
         self.last_title = last_title.text if last_title is not None else "No title available!"
 
     checkForTitle = urlSnarfer(checkForTitle)
-    checkForTitle.__doc__ = utils.web._httpUrlRe
 
     def lt(self, irc, msg, *args, **kwargs):
         try:
