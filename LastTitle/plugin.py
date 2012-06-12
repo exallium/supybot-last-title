@@ -10,7 +10,7 @@ class LastTitle(callbacks.PluginRegexp):
     regexps = ['checkForTitle']
 
     def checkForTitle(self, irc, msg, match):
-        r"https?://[^\])>\s]+"
+        r"https?://[^\])>\s]+|www.[^\])>\s]+"
         x = match.group(0)
 
         for ext in FILEEXT:
@@ -21,6 +21,9 @@ class LastTitle(callbacks.PluginRegexp):
         for end in SITEEND:
             if x.endswith(end):
                 x += '/'
+
+        if x.startswith('www.'):
+            x = 'http://%s' % x
 
         last_title = lxml.html.parse(x).find(".//title")
         self.last_title = last_title.text if last_title is not None else "No title available!"
