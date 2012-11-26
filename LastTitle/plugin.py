@@ -25,6 +25,8 @@ class LastTitle(callbacks.PluginRegexp):
         if x.startswith('www.'):
             x = 'http://%s' % x
 
+        x = x.replace('https://', 'http://')
+
         last_title = lxml.html.parse(x).find(".//title")
         self.last_title = last_title.text if last_title is not None else "No title available!"
 
