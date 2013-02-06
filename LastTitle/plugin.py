@@ -34,7 +34,7 @@ class LastTitle(callbacks.PluginRegexp):
 
     def lt(self, irc, msg, *args, **kwargs):
         try:
-            irc.reply("'%s'" % self.last_title)
+            irc.reply("'%s'" % self.last_title.decode('utf-8', errors='ignore'))
         except AttributeError:
             irc.reply("No title available!")
     lt = wrap(lt, ['channeldb'])
