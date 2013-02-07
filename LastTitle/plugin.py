@@ -1,6 +1,6 @@
 import supybot.callbacks as callbacks
 from supybot.commands import *
-import lxml.html
+from lxml import etree, html
 
 SITEEND = ["com", "org", "edu", "gov", "it", "ca"]
 FILEEXT = ["jpg", "jpeg", "gif", "pdf", "tif", "png"]
@@ -27,14 +27,15 @@ class LastTitle(callbacks.PluginRegexp):
 
         x = x.replace('https://', 'http://')
 
-        last_title = lxml.html.parse(x).find(".//title")
+        parser = etree.HTMLParser(encoding='utf-8')
+        last_title = html.parse(x, parser=parser).find(".//title")
         self.last_title = last_title.text if last_title is not None else "No title available!"
 
     checkForTitle = urlSnarfer(checkForTitle)
 
     def lt(self, irc, msg, *args, **kwargs):
         try:
-            irc.reply("'%s'" % self.last_title.decode('utf-8', errors='ignore'))
+            irc.reply("'%s'" % self.last_title.encode('utf-8', errors="ignore"))
         except AttributeError:
             irc.reply("No title available!")
     lt = wrap(lt, ['channeldb'])
